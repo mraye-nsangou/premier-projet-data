@@ -1,0 +1,143 @@
+ Modélisation et prévision de la volatilité de l'action Apple (AAPL)
+
+1. Présentation du projet
+
+Ce projet porte sur l'étude de la volatilité des rendements journaliers de l'action Apple (AAPL), cotée au NASDAQ.
+
+L'objectif est d'analyser le comportement statistique des rendements financiers, de modéliser leur volatilité conditionnelle à l'aide d'un modèle GARCH(1,1) avec innovations suivant une loi de Student, puis d'évaluer les performances prévisionnelles du modèle.
+
+Une comparaison avec un modèle de référence à variance constante est également réalisée afin d'apprécier la pertinence du modèle GARCH pour la prévision du risque financier.
+
+2.Objectifs
+
+- Collecter et analyser les données historiques de l'action Apple.
+- Étudier les propriétés statistiques des rendements journaliers.
+- Identifier les phénomènes de regroupement de volatilité (volatility clustering).
+- Estimer un modèle GARCH(1,1) avec innovations suivant une loi de Student.
+- Vérifier la qualité de l'ajustement à travers des diagnostics sur les résidus.
+- Produire des prévisions de volatilité conditionnelle.
+- Évaluer les performances prévisionnelles à l'aide des critères RMSE et QLIKE.
+- Comparer le modèle GARCH à une référence à variance constante.
+
+Données utilisées
+
+Les données historiques de l'action Apple sont récupérées à partir de Yahoo Finance.
+
+ Date de début : 18 octobre 2021 
+ Date de fin : 15 octobre 2026 
+ Variable étudiée : Rendements journaliers 
+ Nombre d'observations : 1 254 
+
+Les prix de clôture ajustés (Adjusted Closing Prices) sont utilisés pour calculer les rendements journaliers arithmétiques.
+
+3. Méthodologie
+
+3. 1. Analyse exploratoire et statistique
+
+Une première analyse descriptive permet d'étudier la distribution des rendements à travers :
+- La moyenne et l'écart-type.
+- Les valeurs minimales et maximales.
+- L'asymétrie (skewness).
+- L'aplatissement (kurtosis).
+- Le test de normalité de Jarque-Bera.
+
+L'analyse des fonctions d'autocorrélation des rendements et des rendements au carré permet également de rechercher une éventuelle dépendance dans la volatilité.
+
+3. 2. Modélisation GARCH
+
+La volatilité conditionnelle est modélisée à l'aide d'un modèle GARCH(1,1) :
+
+- Une équation de moyenne avec constante.
+- Une équation de variance conditionnelle GARCH(1,1).
+- Une distribution de Student pour les innovations.
+
+Le choix de la distribution de Student permet de mieux prendre en compte les queues épaisses fréquemment observées dans les séries financières.
+
+3. 3. Diagnostic du modèle
+
+La qualité de l'ajustement est examinée à partir :
+- Des résidus standardisés.
+- Des fonctions d'autocorrélation des résidus.
+- Des fonctions d'autocorrélation des résidus au carré.
+- Des graphiques quantile-quantile (QQ-plots).
+
+3. 4. Prévision de la volatilité
+
+Les données sont divisées en deux échantillons :
+
+| Échantillon | Nombre d'observations 
+| Entraînement | 1 154 |
+| Test | 100 |
+| Total | 1 254 |
+
+Une procédure à fenêtre croissante est utilisée : le modèle est réestimé à chaque étape en intégrant progressivement les nouvelles observations.
+
+3. 5. Évaluation des performances
+
+Les prévisions du modèle GARCH-Student sont comparées à celles d'un modèle de référence à variance constante.
+
+Deux critères sont utilisés :
+
+- RMSE (Root Mean Squared Error): mesure l'écart quadratique moyen entre les variances prévues et les rendements au carré observés.
+- QLIKE : fonction de perte permettant d'évaluer la qualité des prévisions de variance.
+
+4. Principaux résultats
+
+4. 1. Estimation du modèle GARCH-Student
+
+Les paramètres estimés sur l'échantillon d'entraînement sont :
+ μ  = 0,000969 
+ ω = 0,000008 
+ α₁ = 0,071477 
+ β₁ = 0,909258 
+ ν = 4,498855 
+
+La somme α₁ + β₁ est d'environ 0,981, ce qui traduit une forte persistance de la volatilité conditionnelle.
+
+4. 2.Évaluation hors échantillon
+
+Les résultats obtenus sur les 100 observations de test sont :
+
+| Modèle | RMSE | QLIKE |
+| GARCH-Student | 0,0007352130 | -7,042889 |
+| Variance constante | 0,0007241719 | -7,077619 |
+
+Le modèle à variance constante obtient de meilleurs résultats selon les deux critères sur la période de test étudiée.
+
+Les gains relatifs du GARCH-Student par rapport au modèle de référence sont :
+- Gain relatif RMSE : -1,52 %.
+- Gain relatif QLIKE : -0,49 %.
+
+Ces résultats montrent que la capacité du modèle GARCH à représenter une volatilité variable ne garantit pas nécessairement une meilleure performance prévisionnelle.
+
+4. 3. Technologies et bibliothèques
+
+Le projet est réalisé avec le langage R et utilise notamment les bibliothèques suivantes :
+
+- quantmod : récupération des données financières.
+- rugarch : estimation et prévision des modèles GARCH.
+- moments : calcul des statistiques descriptives, notamment skewness et kurtosis.
+
+Les données historiques peuvent être récupérées directement depuis Yahoo Finance à l'aide de `quantmod`.
+
+4. 4. Limites de l'étude
+
+Plusieurs limites doivent être prises en compte :
+
+- La période de test est relativement courte (100 observations).
+- Les rendements au carré sont utilisés comme approximation de la variance réalisée, ce qui constitue une mesure bruitée.
+- Les performances prévisionnelles peuvent dépendre de la période étudiée.
+- La comparaison avec un modèle à variance constante ne permet pas, à elle seule, de conclure sur la supériorité générale d'une famille de modèles.
+
+ Conclusion
+
+Ce projet met en œuvre une démarche d'analyse et de modélisation du risque financier à travers l'étude de la volatilité de l'action Apple.
+
+L'estimation d'un modèle GARCH(1,1) avec innovations suivant une loi de Student permet de représenter une volatilité conditionnelle variable et persistante
+
+Le modèle GARCH utilisé dans cette étude vise à modéliser et à prévoir la volatilité conditionnelle des rendements, et non la direction future du cours de l'action. L'utilisation des rendements au carré dans l'analyse de la dynamique de la variance entraîne une perte d'information sur le signe des variations. Ainsi, le modèle permet d'estimer l'ampleur des fluctuations potentielles, sans déterminer si le cours de l'action Apple connaîtra une hausse ou une baisse.
+
+Toutefois, l'évaluation hors échantillon montre que le modèle à variance constante obtient de meilleurs résultats selon les critères RMSE et QLIKE sur la période étudiée.
+
+Cette expérience souligne l'importance de l'évaluation hors échantillon dans le choix d'un modèle de prévision financière : un modèle plus sophistiqué n'est pas nécessairement un modèle plus performant.
+
